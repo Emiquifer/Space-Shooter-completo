@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject spawnPoint;
 
     private float timer = 0.5f;
+    private float vidas = 5;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -37,6 +38,19 @@ public class Player : MonoBehaviour
         {
             Instantiate(disparoPrefab, spawnPoint.transform.position, Quaternion.identity);
             timer = 0;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("DisparoEnemy") || collision.gameObject.CompareTag("Enemy"))
+        {
+            vidas -= 1;
+            Destroy(collision.gameObject);
+            if(vidas==0)
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 }
