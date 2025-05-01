@@ -124,6 +124,7 @@ MonoBehaviour:
   velocidad: 5
   disparo: {fileID: 7028579817284003971, guid: 9882154656da9ca44812d9d976b70f71, type: 3}
   disparoSpawn: {fileID: 7571517924232400094}
+  powerUpPrefab: {fileID: 3913248759982839574, guid: 67ffe8888302f714da51cc65b07a031c, type: 3}
 --- !u!1 &7571517924232400094
 GameObject:
   m_ObjectHideFlags: 0

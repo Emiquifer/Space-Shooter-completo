@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,9 +7,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float ratioDisparo;
     [SerializeField] private GameObject disparoPrefab;
     [SerializeField] private GameObject spawnPoint;
+    [SerializeField] private GameObject spawnPointDual;
 
     private float timer = 0.5f;
     private float vidas = 5;
+    Boolean powerUp = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -36,7 +39,20 @@ public class Player : MonoBehaviour
         timer += 1 * Time.deltaTime;
         if (Input.GetKey(KeyCode.Space) && timer > ratioDisparo)
         {
-            Instantiate(disparoPrefab, spawnPoint.transform.position, Quaternion.identity);
+            if(powerUp)
+            {
+                foreach(Transform t in spawnPointDual.transform.GetComponentsInChildren<Transform>())
+                {
+                    if (t.CompareTag("SpawnPoint"))
+                    {
+                        Instantiate(disparoPrefab, t.position, Quaternion.identity);
+                    }
+                }
+
+            } else
+            {
+                Instantiate(disparoPrefab, spawnPoint.transform.position, Quaternion.identity);
+            }
             timer = 0;
         }
     }
@@ -51,6 +67,19 @@ public class Player : MonoBehaviour
             {
                 Destroy(this.gameObject);
             }
+        } else if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            Destroy(collision.gameObject);
+            powerUp = true;
+            Invoke(nameof(DeletePowerUp), 5f);
+            this.gameObject.transform.Find("Shield").gameObject.SetActive(true);
+
         }
+    }
+
+    private void DeletePowerUp()
+    {
+        powerUp = false;
+        this.gameObject.transform.Find("Shield").gameObject.SetActive(false);
     }
 }
