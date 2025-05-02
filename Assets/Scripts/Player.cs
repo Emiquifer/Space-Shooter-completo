@@ -1,5 +1,7 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -8,14 +10,16 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject disparoPrefab;
     [SerializeField] private GameObject spawnPoint;
     [SerializeField] private GameObject spawnPointDual;
+    [SerializeField] private GameManager gameManager;
 
     private float timer = 0.5f;
     private float vidas = 5;
-    Boolean powerUp = false;
+    private Boolean dualShot = false;
+    private GameObject shield;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        shield = this.gameObject.transform.Find("Shield").gameObject;
     }
 
     // Update is called once per frame
@@ -39,7 +43,7 @@ public class Player : MonoBehaviour
         timer += 1 * Time.deltaTime;
         if (Input.GetKey(KeyCode.Space) && timer > ratioDisparo)
         {
-            if(powerUp)
+            if(dualShot)
             {
                 foreach(Transform t in spawnPointDual.transform.GetComponentsInChildren<Transform>())
                 {
@@ -59,27 +63,46 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("DisparoEnemy") || collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("DisparoEnemy") || collision.gameObject.CompareTag("Enemy"))
         {
-            vidas -= 1;
-            Destroy(collision.gameObject);
-            if(vidas==0)
+            if (shield.activeSelf)
             {
-                Destroy(this.gameObject);
+                shield.SetActive(false);
+                Destroy(collision.gameObject);
             }
-        } else if (collision.gameObject.CompareTag("PowerUp"))
+            else
+            {
+                vidas -= 1;
+                Destroy(collision.gameObject);
+                if (vidas == 0)
+                {
+                    Destroy(this.gameObject);
+                    gameManager.EndGame();
+                }
+            }
+        }
+        else if (collision.gameObject.CompareTag("Dual"))
         {
+            dualShot = true;
+            Invoke(nameof(DeleteDual), 5f);
             Destroy(collision.gameObject);
-            powerUp = true;
-            Invoke(nameof(DeletePowerUp), 5f);
-            this.gameObject.transform.Find("Shield").gameObject.SetActive(true);
+        }
+        else if (collision.gameObject.CompareTag("ShieldPU"))
+        {
+            shield.SetActive(true);
+            Invoke(nameof(DeleteShield), 5f);
+            Destroy(collision.gameObject);
 
         }
     }
 
-    private void DeletePowerUp()
+    private void DeleteDual()
     {
-        powerUp = false;
-        this.gameObject.transform.Find("Shield").gameObject.SetActive(false);
+        dualShot = false;
+    }
+
+    private void DeleteShield()
+    {
+        shield.SetActive(false);
     }
 }

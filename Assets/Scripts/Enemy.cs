@@ -6,7 +6,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float velocidad;
     [SerializeField] private GameObject disparo;
     [SerializeField] private GameObject disparoSpawn;
-    [SerializeField] private GameObject powerUpPrefab;
+    [SerializeField] private GameObject shieldPrefab;
+    [SerializeField] private GameObject dualPrefab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,9 +34,16 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("DisparoPlayer"))
         {
-            if(Random.Range(1,3) == 1)
+            if(Random.Range(1,4) == 1)
             {
-                Instantiate(powerUpPrefab, this.gameObject.transform.position, Quaternion.identity);
+                if(Random.Range(0,2) == 1)
+                {
+                    Instantiate(dualPrefab, this.gameObject.transform.position, Quaternion.identity);
+                } else
+                {
+                    Instantiate(shieldPrefab, this.gameObject.transform.position, Quaternion.identity);
+
+                }
             }
             Destroy(this.gameObject);
             Destroy(collision.gameObject);

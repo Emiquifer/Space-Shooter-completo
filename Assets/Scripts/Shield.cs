@@ -2,15 +2,12 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (collision.gameObject.CompareTag("DisparoEnemy") || collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(collision.gameObject);
+            this.gameObject.SetActive(false);
+        }
     }
 }
