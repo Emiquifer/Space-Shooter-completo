@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("DisparoPlayer"))
         {
-            if(Random.Range(1,4) == 1)
+            if(Random.Range(0,4) == 1)
             {
                 if(Random.Range(0,2) == 1)
                 {
